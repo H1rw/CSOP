@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSOP v0.1.0 - Live Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen p-6">
+    
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Header -->
+        <header class="mb-8 border-b border-gray-700 pb-4">
+            <h1 class="text-4xl font-bold text-blue-400">CSOP v0.1.0</h1>
+            <p class="text-gray-400 mt-2">Client-Side Orchestration Protocol - Live Demo</p>
+            <div class="mt-4 flex gap-4 text-sm">
+                <span class="bg-green-600 px-3 py-1 rounded">Status: <span id="status">Initializing...</span></span>
+                <span class="bg-gray-700 px-3 py-1 rounded">Version: 0.1.0</span>
+            </div>
+        </header>
+
+        <!-- Capabilities Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Storage -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-purple-400">💾 Storage</h2>
+                
+                <div class="space-y-3">
+                    <input type="text" id="storage-key" placeholder="Key" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                    <textarea id="storage-value" placeholder="Data (JSON)" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white h-20"></textarea>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="testStorageSave()" class="flex-1 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded font-bold">Save</button>
+                        <button onclick="testStorageGet()" class="flex-1 bg-green-600 hover:bg-green-500 px-4 py-2 rounded font-bold">Get</button>
+                    </div>
+                    
+                    <button onclick="testStorageList()" class="w-full bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded">List All Keys</button>
+                </div>
+            </div>
+
+            <!-- Compute -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-yellow-400">⚡ Compute</h2>
+                
+                <div class="space-y-3">
+                    <select id="compute-task" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                        <option value="fibonacci">Fibonacci</option>
+                        <option value="factorial">Factorial</option>
+                        <option value="isPrime">Is Prime</option>
+                        <option value="sum">Sum Array</option>
+                    </select>
+                    
+                    <input type="number" id="compute-input" placeholder="Input (n)" value="100" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                    
+                    <button onclick="testComputeExecute()" class="w-full bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded font-bold">Execute</button>
+                    
+                    <button onclick="testComputeBatch()" class="w-full bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded font-bold">Batch (10 tasks)</button>
+                </div>
+                
+                <div id="compute-result" class="mt-4 p-3 bg-gray-900 rounded text-sm font-mono text-green-400 min-h-[60px]"></div>
+            </div>
+
+            <!-- Sync -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-green-400">🔄 Sync</h2>
+                
+                <div class="space-y-3">
+                    <input type="text" id="sync-event" placeholder="Event name" value="message" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                    <input type="text" id="sync-data" placeholder="Message" value="Hello CSOP!" class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-white">
+                    
+                    <button onclick="testSyncBroadcast()" class="w-full bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded font-bold">Broadcast</button>
+                    
+                    <button onclick="testSyncSubscribe()" class="w-full bg-green-600 hover:bg-green-500 px-4 py-2 rounded font-bold">Subscribe</button>
+                </div>
+                
+                <div id="sync-messages" class="mt-4 p-3 bg-gray-900 rounded text-sm font-mono text-blue-400 min-h-[60px] max-h-[120px] overflow-y-auto"></div>
+            </div>
+        </div>
+
+        <!-- Console Output -->
+        <div class="bg-gray-900 border border-gray-700 rounded-lg p-4">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-bold">📋 Console</h3>
+                <button onclick="clearConsole()" class="text-xs bg-red-600 hover:bg-red-500 px-3 py-1 rounded">Clear</button>
+            </div>
+            <div id="console" class="font-mono text-sm text-gray-300 h-64 overflow-y-auto space-y-1"></div>
+        </div>
+
+    </div>
+
+    <!-- CSOP Integration -->
+    <script type="module">
+        // Import CSOP (adapt path to your setup)
+        import { CSOP } from './src/csop.js';
+        
+        // Initialize CSOP
+        window.csop = new CSOP();
+        
+        (async () => {
+            try {
+                await window.csop.init();
+                document.getElementById('status').textContent = 'Ready ✅';
+                logConsole('success', 'CSOP v0.1.0 initialized successfully');
+                
+                const info = window.csop.info();
+                logConsole('info', `Capabilities: ${info.capabilities.join(', ')}`);
+                
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error ❌';
+                logConsole('error', 'Failed to initialize: ' + error.message);
+            }
+        })();
+
+        // === HELPER FUNCTIONS ===
+        
+        window.logConsole = function(type, message) {
+            const console = document.getElementById('console');
+            const time = new Date().toLocaleTimeString();
+            const colors = {
+                success: 'text-green-400',
+                error: 'text-red-400',
+                info: 'text-blue-400',
+                warning: 'text-yellow-400'
+            };
+            
+            const entry = document.createElement('div');
+            entry.className = colors[type] || 'text-gray-300';
+            entry.textContent = `[${time}] ${message}`;
+            console.insertBefore(entry, console.firstChild);
+        }
+
+        window.clearConsole = function() {
+            document.getElementById('console').innerHTML = '';
+        }
+
+        // === STORAGE TESTS ===
+        
+        window.testStorageSave = async function() {
+            try {
+                const key = document.getElementById('storage-key').value;
+                const value = document.getElementById('storage-value').value;
+                
+                if (!key) {
+                    logConsole('warning', 'Please enter a key');
+                    return;
+                }
+                
+                const data = value ? JSON.parse(value) : { test: 'data', timestamp: Date.now() };
+                
+                const result = await window.csop.dispatch('storage.save', { key, data });
+                logConsole('success', `Saved: ${key} → ${result.data.location} (${result.data.size} bytes)`);
+                
+            } catch (error) {
+                logConsole('error', 'Save failed: ' + error.message);
+            }
+        }
+
+        window.testStorageGet = async function() {
+            try {
+                const key = document.getElementById('storage-key').value;
+                
+                if (!key) {
+                    logConsole('warning', 'Please enter a key');
+                    return;
+                }
+                
+                const result = await window.csop.dispatch('storage.get', { key });
+                logConsole('success', `Retrieved: ${key} → ${JSON.stringify(result.data)}`);
+                document.getElementById('storage-value').value = JSON.stringify(result.data, null, 2);
+                
+            } catch (error) {
+                logConsole('error', 'Get failed: ' + error.message);
+            }
+        }
+
+        window.testStorageList = async function() {
+            try {
+                const result = await window.csop.dispatch('storage.list', {});
+                logConsole('info', `Keys found: ${result.data.length} → [${result.data.join(', ')}]`);
+                
+            } catch (error) {
+                logConsole('error', 'List failed: ' + error.message);
+            }
+        }
+
+        // === COMPUTE TESTS ===
+        
+        window.testComputeExecute = async function() {
+            try {
+                const task = document.getElementById('compute-task').value;
+                const input = parseInt(document.getElementById('compute-input').value);
+                
+                const start = performance.now();
+                const result = await window.csop.dispatch('compute.execute', {
+                    task,
+                    data: task === 'sum' ? { numbers: [1,2,3,4,5] } : { n: input }
+                });
+                const duration = performance.now() - start;
+                
+                document.getElementById('compute-result').textContent = `Result: ${result.data}\nDuration: ${duration.toFixed(2)}ms`;
+                logConsole('success', `Compute ${task}(${input}) = ${result.data} in ${duration.toFixed(2)}ms`);
+                
+            } catch (error) {
+                logConsole('error', 'Compute failed: ' + error.message);
+            }
+        }
+
+        window.testComputeBatch = async function() {
+            try {
+                const tasks = Array.from({ length: 10 }, (_, i) => ({
+                    task: 'fibonacci',
+                    data: { n: 100 + i * 10 }
+                }));
+                
+                const start = performance.now();
+                const result = await window.csop.dispatch('compute.batch', { tasks });
+                const duration = performance.now() - start;
+                
+                document.getElementById('compute-result').textContent = 
+                    `Batch: ${result.data.completed}/${result.data.total} completed\nDuration: ${duration.toFixed(2)}ms`;
+                logConsole('success', `Batch: ${result.data.completed} tasks in ${duration.toFixed(2)}ms`);
+                
+            } catch (error) {
+                logConsole('error', 'Batch failed: ' + error.message);
+            }
+        }
+
+        // === SYNC TESTS ===
+        
+        window.testSyncBroadcast = async function() {
+            try {
+                const event = document.getElementById('sync-event').value;
+                const data = document.getElementById('sync-data').value;
+                
+                await window.csop.dispatch('sync.broadcast', {
+                    event,
+                    data: { message: data, timestamp: Date.now() }
+                });
+                
+                logConsole('success', `Broadcasted: ${event} → "${data}"`);
+                
+            } catch (error) {
+                logConsole('error', 'Broadcast failed: ' + error.message);
+            }
+        }
+
+        window.testSyncSubscribe = async function() {
+            try {
+                await window.csop.dispatch('sync.subscribe', {
+                    channel: 'default',
+                    callback: (msg) => {
+                        const syncDiv = document.getElementById('sync-messages');
+                        const msgEl = document.createElement('div');
+                        msgEl.textContent = `[${msg.event}] ${JSON.stringify(msg.data)}`;
+                        syncDiv.insertBefore(msgEl, syncDiv.firstChild);
+                        
+                        logConsole('info', `Received: ${msg.event}`);
+                    }
+                });
+                
+                logConsole('success', 'Subscribed to default channel');
+                
+            } catch (error) {
+                logConsole('error', 'Subscribe failed: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
