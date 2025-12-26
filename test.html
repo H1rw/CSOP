@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>CSOP Test</title></head><body>
+<h1>CSOP Test</h1>
+<button onclick="test()">Test Now</button>
+<div id="result"></div>
+<script type="module">
+import { CSOP } from './src/csop.js';
+let csop;
+(async function() {
+    csop = new CSOP();
+    await csop.init();
+    document.getElementById('result').textContent = 'CSOP Ready!';
+})();
+window.test = async function() {
+    await csop.dispatch('storage.save', { key: 'test', data: { works: true } });
+    const result = await csop.dispatch('storage.get', { key: 'test' });
+    alert('Success: ' + JSON.stringify(result.data));
+}
+</script>
+</body></html>
